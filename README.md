@@ -1,4 +1,3 @@
-
 # Firebase Authentication with Argon2 Hashing
 
 This project provides a simple Python module for user authentication using Firebase Firestore and Argon2 for password hashing.
@@ -31,18 +30,26 @@ This project provides a simple Python module for user authentication using Fireb
 
 ## Configuration
 
-1. **Set the `FIREBASE_DB_JSON_PATH` environment variable:**
+1. **Set the `FIREBASE_CREDENTIALS` environment variable:**
 
-   This environment variable should point to the absolute path of your Firebase service account key JSON file.
+   This environment variable should contain the *entire JSON content* of your Firebase service account key. It is crucial that the value is a single, unquoted JSON string.
 
-   **For Windows:**
-   ```bash
-   set FIREBASE_DB_JSON_PATH="path\to\your\serviceAccountKey.json"
+   **Example of setting directly in your shell (replace with your actual JSON):**
+
+   **For Windows (using Command Prompt):**
+   ```cmd
+   set FIREBASE_CREDENTIALS={"type": "service_account", "project_id": "your-project-id", ...}
    ```
 
-   **For Linux and macOS:**
+   **For Linux and macOS (using Bash/Zsh):**
    ```bash
-   export FIREBASE_DB_JSON_PATH="/path/to/your/serviceAccountKey.json"
+   export FIREBASE_CREDENTIALS='{"type": "service_account", "project_id": "your-project-id", ...}'
+   ```
+
+   **Using a `.env` file:**
+   You can also place this variable in a `.env` file in the project root. Ensure the JSON content is on a single line and not enclosed in extra quotes (unless your shell requires it for `export` commands, as shown above).
+   ```
+   FIREBASE_CREDENTIALS={"type": "service_account", "project_id": "your-project-id", ...}
    ```
 
 ## Usage
@@ -75,7 +82,7 @@ To run the tests, execute the following command:
 python test.py
 ```
 
-**Note:** Make sure you have set the `FIREBASE_DB_JSON_PATH` environment variable before running the tests.
+**Note:** The `test.py` script will attempt to read the `FIREBASE_CREDENTIALS` from a `.env` file in the project root if the environment variable is not already set in your shell.
 
 ## Credits
 

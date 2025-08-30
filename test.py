@@ -2,6 +2,9 @@ from firebase_db import add_user, verify_user
 import os
 
 def run_tests():
+    """Runs a series of tests for the user authentication system."""
+
+    # Check if the required environment variable is set
     if not os.environ.get("FIREBASE_DB_JSON_PATH"):
         print("Please set the FIREBASE_DB_JSON_PATH environment variable to run the tests.")
         return

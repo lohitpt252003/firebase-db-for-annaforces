@@ -57,7 +57,7 @@ This project provides a simple Python module for user authentication using Fireb
 The `firebase_db.py` module provides the following functions:
 
 - `add_user(user_id, password)`: Adds a new user to the Firestore database with a hashed password.
-- `verify_user(user_id, password)`: Verifies the password of an existing user.
+- `verify_user(user_id, password)`: Verifies the password of an existing user. Returns `(True, None)` on success, `(False, None)` if password verification fails, or `(None, error_message)` if there's a database error or the user is not found.
 
 ### Example
 

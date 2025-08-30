@@ -3,22 +3,47 @@ import os
 from firebase_admin import credentials, firestore
 from argon2 import PasswordHasher
 from dotenv import load_dotenv
+import json
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Load the path to the service account key from the environment variable
-cred_path = os.environ.get("FIREBASE_DB_JSON_PATH")
+
+# Load the JSON content of the service account key from the environment variable
+cred_json_str = os.environ.get("FIREBASE_DB_CREDENTIALS")
 
 # Initialize Firebase and PasswordHasher only if the environment variable is set
-if not cred_path:
+if not cred_json_str:
     db = None
     ph = None
+    print("Warning: FIREBASE_DB_CREDENTIALS environment variable not set. Database functions will be disabled.")
 else:
-    cred = credentials.Certificate(cred_path)
-    firebase_admin.initialize_app(cred)
-    db = firestore.client()
-    ph = PasswordHasher()
+    try:
+        # Parse the JSON string from the environment variable into a dictionary
+        cred_dict = json.loads(cred_json_str)
+        cred = credentials.Certificate(cred_dict)
+        firebase_admin.initialize_app(cred)
+        db = firestore.client()
+        ph = PasswordHasher()
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON in FIREBASE_DB_CREDENTIALS: {e}")
+        db = None
+        ph = None
+
+
+
+# # Load the path to the service account key from the environment variable
+# cred_path = os.environ.get("FIREBASE_DB_JSON_PATH")
+
+# # Initialize Firebase and PasswordHasher only if the environment variable is set
+# if not cred_path:
+#     db = None
+#     ph = None
+# else:
+#     cred = credentials.Certificate(cred_path)
+#     firebase_admin.initialize_app(cred)
+#     db = firestore.client()
+#     ph = PasswordHasher()
 
 def get_user(user_id):
     """Fetches a user from the Firestore database.
@@ -91,7 +116,3 @@ def verify_user(user_id, password):
     else:
         # User not found
         return False, None
-<<<<<<< HEAD
-=======
-
->>>>>>> 495318c69ca947a7966ae7ec180641b26e1e466c

@@ -91,3 +91,7 @@ def verify_user(user_id, password):
     else:
         # User not found
         return False, None
+<<<<<<< HEAD
+=======
+
+>>>>>>> 495318c69ca947a7966ae7ec180641b26e1e466c

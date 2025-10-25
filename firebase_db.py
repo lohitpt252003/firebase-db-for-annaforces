@@ -45,11 +45,11 @@ else:
 #     db = firestore.client()
 #     ph = PasswordHasher()
 
-def get_user(user_id):
+def get_user(username):
     """Fetches a user from the Firestore database.
 
     Args:
-        user_id (str): The ID of the user to fetch.
+        username (str): The username of the user to fetch.
 
     Returns:
         tuple: A tuple containing the user data (dict) and an error message (str).
@@ -58,18 +58,18 @@ def get_user(user_id):
     """
     if not db:
         return None, "Database not initialized. FIREBASE_DB_JSON_PATH not set."
-    doc_ref = db.collection(u'users').document(user_id)
+    doc_ref = db.collection(u'users').document(username)
     doc = doc_ref.get()
     if doc.exists:
         return doc.to_dict(), None
     else:
         return None, None
 
-def add_user(user_id, password):
+def add_user(username, password):
     """Adds a new user to the Firestore database with a hashed password.
 
     Args:
-        user_id (str): The ID of the new user.
+        username (str): The username of the new user.
         password (str): The password for the new user.
 
     Returns:
@@ -81,17 +81,17 @@ def add_user(user_id, password):
         return None, "Database not initialized. FIREBASE_DB_JSON_PATH not set."
     # Hash the password before storing it
     hashed_password = ph.hash(password)
-    doc_ref = db.collection(u'users').document(user_id)
+    doc_ref = db.collection(u'users').document(username)
     doc_ref.set({
         u'password': hashed_password
     })
     return True, None
 
-def verify_user(user_id, password):
+def verify_user(username, password):
     """Verifies the password of an existing user.
 
     Args:
-        user_id (str): The ID of the user to verify.
+        username (str): The username of the user to verify.
         password (str): The password to verify.
 
     Returns:
@@ -102,7 +102,7 @@ def verify_user(user_id, password):
     """
     if not db:
         return None, "Database not initialized. FIREBASE_DB_JSON_PATH not set."
-    user_data, error = get_user(user_id)
+    user_data, error = get_user(username)
     if error:
         return None, error
     if user_data:
